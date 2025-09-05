@@ -3,50 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Blanks Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Teacher Login - Fill in the Blanks Generator</title>
+    <script>
+        // Check if already logged in
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'app.html';
+        } else {
+            window.location.href = 'login.html';
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Fill in the Blanks Generator</h1>
-        
-        <div class="input-section">
-            <div class="input-group">
-                <label for="original-text">Enter your text:</label>
-                <textarea id="original-text" placeholder="Type or paste your text here..."></textarea>
-            </div>
-            
-            <div class="input-group">
-                <label for="words-to-remove">Words to remove (separated by commas):</label>
-                <input type="text" id="words-to-remove" placeholder="word1, word2, word3">
-                <div class="ai-buttons-row">
-                    <button id="ai-prepositions-btn" class="ai-extract-button">Extract Prepositions</button>
-                    <button id="ai-verbs-btn" class="ai-extract-button">Extract Verbs</button>
-                    <button id="ai-nouns-btn" class="ai-extract-button">Extract Nouns</button>
-                    <button id="ai-adjectives-btn" class="ai-extract-button">Extract Adjectives</button>
-                </div>
-            </div>
-            
-            <button id="generate-btn">Generate Exercise</button>
-        </div>
-        
-        <div class="exercise-container" id="exercise-container" style="display: none;">
-            <div class="text-section">
-                <h3>Text with Blanks</h3>
-                <div id="text-with-blanks"></div>
-            </div>
-            
-            <div class="word-bank-section">
-                <h3>Word Bank</h3>
-                <div id="word-bank"></div>
-                <button id="export-btn" class="export-button">Export to Word</button>
-            </div>
-        </div>
-    </div>
-    
-    <script src="https://unpkg.com/docx@8.0.0/build/index.js"></script>
-    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <p>Redirecting to login...</p>
 </body>
 </html>

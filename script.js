@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.getElementById('generate-btn');
     const exportBtn = document.getElementById('export-btn');
+    const logoutBtn = document.getElementById('logout-btn');
     const aiPrepositionsBtn = document.getElementById('ai-prepositions-btn');
     const aiVerbsBtn = document.getElementById('ai-verbs-btn');
     const aiNounsBtn = document.getElementById('ai-nouns-btn');
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     generateBtn.addEventListener('click', generateExercise);
     exportBtn.addEventListener('click', exportToWord);
+    logoutBtn.addEventListener('click', logout);
     aiPrepositionsBtn.addEventListener('click', () => aiExtractWordType('prepositions'));
     aiVerbsBtn.addEventListener('click', () => aiExtractWordType('verbs'));
     aiNounsBtn.addEventListener('click', () => aiExtractWordType('nouns'));
