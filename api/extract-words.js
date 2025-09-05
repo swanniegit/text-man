@@ -43,8 +43,26 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    const extractedWords = data.choices[0].message.content.trim();
-
+    const aiExtractedWords = data.choices[0].message.content.trim();
+    
+    // Verify AI results against actual text to prevent hallucination
+    const aiWords = aiExtractedWords.split(',').map(w => w.trim().toLowerCase());
+    const verifiedWords = [];
+    
+    // For each word type, find actual occurrences in text
+    const uniqueWords = [...new Set(aiWords)];
+    uniqueWords.forEach(word => {
+      if (word) {
+        const regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+        const matches = text.match(regex);
+        if (matches) {
+          // Add each actual occurrence
+          matches.forEach(() => verifiedWords.push(word));
+        }
+      }
+    });
+    
+    const extractedWords = verifiedWords.join(', ');
     return res.status(200).json({ words: extractedWords });
 
   } catch (error) {
