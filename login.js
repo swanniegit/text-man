@@ -42,11 +42,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-// Function to logout (can be called from main app)
-function logout() {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('username');
-    localStorage.removeItem('loginTime');
-    window.location.replace('login.html');
-}

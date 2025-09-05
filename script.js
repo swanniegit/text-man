@@ -280,4 +280,15 @@ document.addEventListener('DOMContentLoaded', function() {
             button.textContent = originalText_btn;
         }
     }
+
+    // Logout function
+    function logout() {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('username');
+        localStorage.removeItem('loginTime');
+        window.location.replace('login.html');
+    }
+
+    // Make logout function global so the logout button can access it
+    window.logout = logout;
 });
