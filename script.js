@@ -244,20 +244,20 @@ document.addEventListener('DOMContentLoaded', function() {
         button.textContent = 'Extracting...';
 
         try {
-            const response = await fetch('https://api.moonshot.ai/v1/chat/completions', {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${window.KIMI_API_KEY || 'sk-pWCiFQphJwgvaeIysNOcNOWoxa77OtdTBmRiNuM5ShITTUWx'}`
+                    'Authorization': `Bearer ${window.OPENAI_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: 'moonshot-v1-8k',
+                    model: 'gpt-3.5-turbo',
                     messages: [{
                         role: 'user',
                         content: `Extract all ${wordType} from this text. Return ONLY the ${wordType} separated by commas, nothing else:\n\n${originalText}`
                     }],
                     max_tokens: 200,
-                    temperature: 0.3
+                    temperature: 0.1
                 })
             });
 
@@ -272,8 +272,8 @@ document.addEventListener('DOMContentLoaded', function() {
             wordsToRemoveInput.value = extractedWords;
             
         } catch (error) {
-            console.error(`AI ${wordType} extraction error:`, error);
-            alert(`AI ${wordType} extraction failed. Please check your connection or enter words manually.`);
+            console.error(`OpenAI ${wordType} extraction error:`, error);
+            alert(`OpenAI ${wordType} extraction failed. Please check your API key and connection, or enter words manually.`);
         } finally {
             // Re-enable button
             button.disabled = false;
