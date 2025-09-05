@@ -91,8 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const wordInfo = wordsWithPositions[i];
             removedWords.push(wordInfo.word);
             
+            // Find the correct sequential number for this position
+            const sequentialNumber = wordsWithPositions.findIndex(item => item.start === wordInfo.start) + 1;
+            
             processedText = processedText.substring(0, wordInfo.start) + 
-                          `<span class="blank">${i + 1}.</span>` + 
+                          `<span class="blank">${sequentialNumber}.</span>` + 
                           processedText.substring(wordInfo.end);
         }
         
