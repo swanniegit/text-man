@@ -59,20 +59,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const removedWords = [];
         const blankData = [];
         
-        // Collect all word matches with their positions
-        const allMatches = [];
+        // First, find all actual word occurrences in the text
+        const actualMatches = [];
+        const processedPositions = new Set(); // Track positions we've already processed
         
         wordsToRemove.forEach(wordToRemove => {
             const regex = new RegExp('\\b' + escapeRegExp(wordToRemove) + '\\b', 'gi');
             let match;
             while ((match = regex.exec(text)) !== null) {
-                allMatches.push({
-                    word: match[0],
-                    start: match.index,
-                    end: match.index + match[0].length
-                });
+                const position = `${match.index}-${match.index + match[0].length}`;
+                
+                // Only add if we haven't processed this exact position before
+                if (!processedPositions.has(position)) {
+                    actualMatches.push({
+                        word: match[0],
+                        start: match.index,
+                        end: match.index + match[0].length
+                    });
+                    processedPositions.add(position);
+                }
             }
         });
+        
+        // Now handle the word bank - include duplicates for display but only replace actual matches
+        const wordBankList = [...wordsToRemove]; // Keep all duplicates for word bank
+        const allMatches = actualMatches; // But only process actual matches
         
         // Sort by position to maintain left-to-right order
         allMatches.sort((a, b) => a.start - b.start);
@@ -122,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return {
             textWithBlankSpaces: processedText,
-            removedWords: shuffleArray([...removedWords]),
+            removedWords: shuffleArray([...wordBankList]), // Use original list with duplicates for word bank
             blankData: blankData
         };
     }
