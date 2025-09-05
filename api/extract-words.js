@@ -30,7 +30,7 @@ export default async function handler(req, res) {
         model: 'gpt-3.5-turbo',
         messages: [{
           role: 'user',
-          content: `Carefully read this text and extract ALL instances of ${wordType}, including duplicates. If a word appears multiple times, list it multiple times. Return ONLY the ${wordType} separated by commas, nothing else. Be thorough and don't miss any:\n\n${text}`
+          content: `Read this text and identify each ${wordType} as it appears in order. List each occurrence exactly once, in the order they appear. Do not repeat words unless they actually appear multiple times in the text. Return ONLY the ${wordType} found, separated by commas:\n\n${text}`
         }],
         max_tokens: 200,
         temperature: 0.1
