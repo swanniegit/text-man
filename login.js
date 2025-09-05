@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessage = document.getElementById('error-message');
     const loginBtn = document.getElementById('login-btn');
 
-    // Check if already logged in
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-        window.location.href = 'app.html';
+    // Check if already logged in (only on login page)
+    if (window.location.pathname.includes('login.html') && localStorage.getItem('isLoggedIn') === 'true') {
+        window.location.replace('app.html');
     }
 
     loginForm.addEventListener('submit', function(e) {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('loginTime', new Date().getTime());
             
             // Redirect to main app
-            window.location.href = 'app.html';
+            window.location.replace('app.html');
         } else {
             // Show error
             errorMessage.textContent = 'Invalid username or password';
@@ -48,5 +48,5 @@ function logout() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
     localStorage.removeItem('loginTime');
-    window.location.href = 'login.html';
+    window.location.replace('login.html');
 }

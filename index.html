@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Login - Fill in the Blanks Generator</title>
     <script>
-        // Check if already logged in
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'app.html';
-        } else {
-            window.location.href = 'login.html';
+        // Only redirect if we're actually on index.html to prevent loops
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+            // Check if already logged in
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                window.location.replace('app.html');
+            } else {
+                window.location.replace('login.html');
+            }
         }
     </script>
 </head>
 <body>
-    <p>Redirecting to login...</p>
+    <p>Redirecting...</p>
 </body>
 </html>

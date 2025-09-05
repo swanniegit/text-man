@@ -53,9 +53,9 @@
     <script src="login.js"></script>
     <script src="script.js"></script>
     <script>
-        // Check authentication on page load
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.href = 'login.html';
+        // Check authentication on page load (only on app page)
+        if (window.location.pathname.includes('app.html') && localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.replace('login.html');
         }
     </script>
 </body>
