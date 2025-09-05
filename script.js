@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalText = originalTextArea.value.trim();
         let wordsToRemove = wordsToRemoveInput.value
             .split(',')
-            .map(word => word.trim())
-            .filter(word => word.length > 0);
+            .map(word => word.trim().toLowerCase())
+            .filter(word => word.length > 0 && /^[a-zA-Z']+$/.test(word));
 
         if (!originalText) {
             alert('Please enter some text first.');
