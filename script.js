@@ -89,8 +89,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const adjustedStart = matchInfo.start + offset;
             const adjustedEnd = matchInfo.end + offset;
             
-            // Simply replace the word with the blank - keep original spacing
+            // Ensure proper spacing around blanks
+            const beforeChar = adjustedStart > 0 ? processedText[adjustedStart - 1] : '';
+            const afterChar = adjustedEnd < processedText.length ? processedText[adjustedEnd] : '';
+            
             let replacement = blankSpan;
+            
+            // Add space before blank if the previous character isn't whitespace
+            if (beforeChar && !/\s/.test(beforeChar)) {
+                replacement = ' ' + replacement;
+            }
+            
+            // Add space after blank if the next character isn't whitespace or punctuation
+            if (afterChar && !/[\s\.,!?;:]/.test(afterChar)) {
+                replacement = replacement + ' ';
+            }
             
             processedText = processedText.substring(0, adjustedStart) + 
                           replacement + 
