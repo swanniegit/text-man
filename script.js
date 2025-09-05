@@ -244,6 +244,11 @@ document.addEventListener('DOMContentLoaded', function() {
         button.textContent = 'Extracting...';
 
         try {
+            // Debug: Check if API key is set
+            if (!window.OPENAI_API_KEY || window.OPENAI_API_KEY === 'your-openai-api-key-here') {
+                throw new Error('OpenAI API key not configured. Please set your API key in config.js');
+            }
+
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -262,7 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) {
-                throw new Error('AI request failed');
+                const errorData = await response.json();
+                throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
             }
 
             const data = await response.json();

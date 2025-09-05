@@ -1,5 +1,6 @@
 // Configuration for production deployment
-window.OPENAI_API_KEY = window.OPENAI_API_KEY || 'your-openai-api-key-here';
+// IMPORTANT: Replace 'your-openai-api-key-here' with your actual OpenAI API key
+window.OPENAI_API_KEY = 'your-openai-api-key-here';
 
-// Note: In production, you should set OPENAI_API_KEY as an environment variable in Vercel
-// This fallback is for demo purposes only
+// For security: In a real production app, you should use a backend server to make API calls
+// This keeps your API key secure and hidden from users
