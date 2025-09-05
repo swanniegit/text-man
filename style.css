@@ -191,6 +191,44 @@ button:hover {
     flex: 2;
 }
 
+.image-section {
+    flex: 1;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #b3d9ff;
+    box-shadow: 0 4px 15px rgba(0, 123, 191, 0.08);
+    text-align: center;
+}
+
+.generate-image-button {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 12px 20px;
+    font-size: 14px;
+    width: 100%;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 123, 191, 0.2);
+}
+
+.generate-image-button:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    box-shadow: 0 6px 20px rgba(0, 123, 191, 0.3);
+}
+
+#generated-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#image-loading {
+    color: #007bff;
+    font-weight: 600;
+    padding: 20px;
+}
+
 .word-bank-section {
     flex: 1;
     background: linear-gradient(135deg, #fff5e6 0%, #ffecd1 100%);
