@@ -89,18 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const adjustedStart = matchInfo.start + offset;
             const adjustedEnd = matchInfo.end + offset;
             
-            // Check if we need to add space before or after
-            const beforeChar = adjustedStart > 0 ? processedText[adjustedStart - 1] : '';
-            const afterChar = adjustedEnd < processedText.length ? processedText[adjustedEnd] : '';
-            
-            // Add spaces around the blank if needed
+            // Simply replace the word with the blank - keep original spacing
             let replacement = blankSpan;
-            if (beforeChar && beforeChar !== ' ' && beforeChar !== '\n' && beforeChar !== '\t') {
-                replacement = ' ' + replacement;
-            }
-            if (afterChar && afterChar !== ' ' && afterChar !== '\n' && afterChar !== '\t' && afterChar !== '.' && afterChar !== ',' && afterChar !== '!' && afterChar !== '?') {
-                replacement = replacement + ' ';
-            }
             
             processedText = processedText.substring(0, adjustedStart) + 
                           replacement + 
