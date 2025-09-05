@@ -244,35 +244,24 @@ document.addEventListener('DOMContentLoaded', function() {
         button.textContent = 'Extracting...';
 
         try {
-            // Debug: Check if API key is set
-            if (!window.OPENAI_API_KEY || window.OPENAI_API_KEY === 'your-openai-api-key-here') {
-                throw new Error('OpenAI API key not configured. Please set your API key in config.js');
-            }
-
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            const response = await fetch('/api/extract-words', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${window.OPENAI_API_KEY}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
-                    messages: [{
-                        role: 'user',
-                        content: `Extract all ${wordType} from this text. Return ONLY the ${wordType} separated by commas, nothing else:\n\n${originalText}`
-                    }],
-                    max_tokens: 200,
-                    temperature: 0.1
+                    text: originalText,
+                    wordType: wordType
                 })
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
+                throw new Error(errorData.error || 'API request failed');
             }
 
             const data = await response.json();
-            const extractedWords = data.choices[0].message.content.trim();
+            const extractedWords = data.words;
             
             // Put the AI extracted words in the input field
             wordsToRemoveInput.value = extractedWords;
