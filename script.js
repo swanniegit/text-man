@@ -89,12 +89,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const adjustedStart = matchInfo.start + offset;
             const adjustedEnd = matchInfo.end + offset;
             
+            // Check if we need to add space before or after
+            const beforeChar = adjustedStart > 0 ? processedText[adjustedStart - 1] : '';
+            const afterChar = adjustedEnd < processedText.length ? processedText[adjustedEnd] : '';
+            
+            // Add spaces around the blank if needed
+            let replacement = blankSpan;
+            if (beforeChar && beforeChar !== ' ' && beforeChar !== '\n' && beforeChar !== '\t') {
+                replacement = ' ' + replacement;
+            }
+            if (afterChar && afterChar !== ' ' && afterChar !== '\n' && afterChar !== '\t' && afterChar !== '.' && afterChar !== ',' && afterChar !== '!' && afterChar !== '?') {
+                replacement = replacement + ' ';
+            }
+            
             processedText = processedText.substring(0, adjustedStart) + 
-                          blankSpan + 
+                          replacement + 
                           processedText.substring(adjustedEnd);
             
             // Update offset for next replacement
-            offset += blankSpan.length - (matchInfo.end - matchInfo.start);
+            offset += replacement.length - (matchInfo.end - matchInfo.start);
             
             // Store data for export
             removedWords.push(matchInfo.word);
