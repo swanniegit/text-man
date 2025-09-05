@@ -59,14 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const removedWords = [];
         const blankData = [];
         
-        // Find all occurrences of words to remove with their positions
-        const wordsWithPositions = [];
+        // Collect all word matches with their positions
+        const allMatches = [];
         
         wordsToRemove.forEach(wordToRemove => {
             const regex = new RegExp('\\b' + escapeRegExp(wordToRemove) + '\\b', 'gi');
             let match;
             while ((match = regex.exec(text)) !== null) {
-                wordsWithPositions.push({
+                allMatches.push({
                     word: match[0],
                     start: match.index,
                     end: match.index + match[0].length
@@ -74,33 +74,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Sort by position in text to maintain sequential order
-        wordsWithPositions.sort((a, b) => a.start - b.start);
+        // Sort by position to maintain left-to-right order
+        allMatches.sort((a, b) => a.start - b.start);
         
-        // Create blank data for export
-        wordsWithPositions.forEach((wordInfo, index) => {
+        // Create replacement map with correct sequential numbers
+        let processedText = text;
+        let offset = 0;
+        
+        allMatches.forEach((matchInfo, index) => {
+            const blankNumber = index + 1;
+            const blankSpan = `<span class="blank">${blankNumber}.</span>`;
+            
+            // Calculate adjusted position based on previous replacements
+            const adjustedStart = matchInfo.start + offset;
+            const adjustedEnd = matchInfo.end + offset;
+            
+            processedText = processedText.substring(0, adjustedStart) + 
+                          blankSpan + 
+                          processedText.substring(adjustedEnd);
+            
+            // Update offset for next replacement
+            offset += blankSpan.length - (matchInfo.end - matchInfo.start);
+            
+            // Store data for export
+            removedWords.push(matchInfo.word);
             blankData.push({
-                number: index + 1,
-                word: wordInfo.word
+                number: blankNumber,
+                word: matchInfo.word
             });
         });
-        
-        // Replace words with numbered blanks in reverse order to maintain positions
-        let processedText = text;
-        for (let i = wordsWithPositions.length - 1; i >= 0; i--) {
-            const wordInfo = wordsWithPositions[i];
-            removedWords.push(wordInfo.word);
-            
-            // Find the correct sequential number for this position
-            const sequentialNumber = wordsWithPositions.findIndex(item => item.start === wordInfo.start) + 1;
-            
-            processedText = processedText.substring(0, wordInfo.start) + 
-                          `<span class="blank">${sequentialNumber}.</span>` + 
-                          processedText.substring(wordInfo.end);
-        }
-        
-        // Reverse the removedWords array to match the original text order
-        removedWords.reverse();
 
         return {
             textWithBlankSpaces: processedText,
