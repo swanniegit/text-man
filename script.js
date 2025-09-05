@@ -6,11 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const aiVerbsBtn = document.getElementById('ai-verbs-btn');
     const aiNounsBtn = document.getElementById('ai-nouns-btn');
     const aiAdjectivesBtn = document.getElementById('ai-adjectives-btn');
+    const generateImageBtn = document.getElementById('generate-image-btn');
     const originalTextArea = document.getElementById('original-text');
     const wordsToRemoveInput = document.getElementById('words-to-remove');
     const exerciseContainer = document.getElementById('exercise-container');
     const textWithBlanks = document.getElementById('text-with-blanks');
     const wordBank = document.getElementById('word-bank');
+    const imageContainer = document.getElementById('image-container');
+    const imageDisplay = document.getElementById('image-display');
+    const generatedImage = document.getElementById('generated-image');
+    const imageLoading = document.getElementById('image-loading');
 
     let currentExerciseData = null;
 
@@ -21,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     aiVerbsBtn.addEventListener('click', () => aiExtractWordType('verbs'));
     aiNounsBtn.addEventListener('click', () => aiExtractWordType('nouns'));
     aiAdjectivesBtn.addEventListener('click', () => aiExtractWordType('adjectives'));
+    generateImageBtn.addEventListener('click', generateImage);
 
     function generateExercise() {
         const originalText = originalTextArea.value.trim();
@@ -202,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, WidthType } = docx;
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, WidthType, ImageRun } = docx;
 
             // Get text with blanks (clean HTML and add underscores)
             const textWithBlanks = currentExerciseData.textWithBlanks.replace(/<span class="blank">(\d+)\.<\/span>/g, '$1 ____');
@@ -212,6 +218,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 new Paragraph({ children: [new TextRun(word)] })
             );
 
+            // Create middle column content (image or placeholder)
+            let middleColumnContent;
+            if (currentExerciseData.imageUrl) {
+                try {
+                    // Fetch the image data
+                    const imageResponse = await fetch(currentExerciseData.imageUrl);
+                    const imageBuffer = await imageResponse.arrayBuffer();
+                    
+                    middleColumnContent = [
+                        new Paragraph({
+                            children: [
+                                new ImageRun({
+                                    data: imageBuffer,
+                                    transformation: {
+                                        width: 200,
+                                        height: 200,
+                                    },
+                                })
+                            ],
+                            alignment: "center"
+                        })
+                    ];
+                } catch (imageError) {
+                    console.error('Error adding image to Word document:', imageError);
+                    middleColumnContent = [new Paragraph({ children: [new TextRun("Image could not be loaded")] })];
+                }
+            } else {
+                middleColumnContent = [new Paragraph({ children: [new TextRun(" ")] })];
+            }
+
             // Create single row table
             const tableRow = new TableRow({
                 children: [
@@ -220,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         width: { size: 50, type: WidthType.PERCENTAGE }
                     }),
                     new TableCell({
-                        children: [new Paragraph({ children: [new TextRun(" ")] })],
+                        children: middleColumnContent,
                         width: { size: 25, type: WidthType.PERCENTAGE }
                     }),
                     new TableCell({
@@ -314,6 +350,57 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('username');
         localStorage.removeItem('loginTime');
         window.location.replace('login.html');
+    }
+
+    async function generateImage() {
+        const originalText = originalTextArea.value.trim();
+        
+        if (!originalText) {
+            alert('Please enter some text first.');
+            return;
+        }
+
+        // Show loading state
+        generateImageBtn.style.display = 'none';
+        imageDisplay.style.display = 'none';
+        imageLoading.style.display = 'block';
+
+        try {
+            const response = await fetch('/api/generate-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: originalText
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Image generation failed');
+            }
+
+            const data = await response.json();
+            
+            // Display the generated image
+            generatedImage.src = data.imageUrl;
+            imageLoading.style.display = 'none';
+            imageDisplay.style.display = 'block';
+            
+            // Update current exercise data to include image for export
+            if (currentExerciseData) {
+                currentExerciseData.imageUrl = data.imageUrl;
+            }
+            
+        } catch (error) {
+            console.error('Image generation error:', error);
+            alert('Image generation failed. Please check your connection and try again.');
+            
+            // Reset UI state
+            imageLoading.style.display = 'none';
+            generateImageBtn.style.display = 'block';
+        }
     }
 
     // Make logout function global so the logout button can access it
